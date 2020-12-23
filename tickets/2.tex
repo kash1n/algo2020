@@ -1,1 +1,65 @@
+
 \section {Сортировка слиянием. Основная теорема для метода «разделяй и властвуй»}
+\noindent{\bf Сортировка слиянием (Merge sort):}\\
+В основе лежит идея «Разделяй и властвуй» (Divide and conquer):
+\begin{enumerate}
+\item Разделим массив на 2 части размера $\frac{n}{2}$
+\item Отсортируем обе части (2 рекурсивных вызова)
+\item Выполним процедуру слияния: объединяем отсортированные части таким образом, чтобы
+получить полностью отсортированный массив
+\end{enumerate}
+Ключевая процедура - слияние (merge). Особенность: слияние требует дополнительный массив
+\texttt{aux} (auxiliary - вспомогательный). Выделяем его сразу, чтобы не делать этого при
+каждом вызове.
+Код:
+\begin{verbatim}
+procedure MergeSort( a[] ):
+    aux = new array [0..n-1]
+    MergeSort(a, aux, 0, n-1)
+end
+
+procedure MergeSort( a[], aux[], low, high ):
+    if (high <= low):
+        return
+    mid = low + (high - low) / 2
+    MergeSort(a, aux, low, mid)
+    MergeSort(a, aux, mid + 1, high)
+    Merge(a, aux, low, mid, high)
+end
+
+procedure Merge( a[], aux[], low, mid, high ):
+    for k in [low..high]:
+        aux[k] = a[k]
+    i = low, j = mid + 1
+    for k in [low..high]:
+        if i > mid:
+            a[k] = aux[j++]
+        else if j > high:
+            a[k] = aux[i++]
+        else if aux[j] < aux[i]:
+            a[k] = aux[j++]
+        else:
+            a[k] = aux[i++]
+    end
+end
+\end{verbatim}
+Анализ сложности будет проведен позже.\\
+{\bf Основная теорема (Master theorem):}\\
+Пусть $n$ - размер задачи. $a$ - количество подзадач в рекурсии. $\frac{n}{b}$ - размер каждой подзадачи. $O(n^d)$ - оценка сложности работы, производимой алгоритмом вне рекурсивных вызовов. Пусть
+$$
+T(n) = aT(\left\lceil\frac{n}{b}\right\rceil) + O(n^d),\ \ \ a>0,\ b>1,\ d\ge0
+$$
+Тогда
+$$
+T(n) = 
+\begin{cases}
+ O(n^d),\ d>\log_{b}a \\
+ O(n^d\log n),\ d=\log_{b}a \\
+ O(n^{\log_{b}a}),\ d<\log_{b}a \\
+\end{cases}
+$$
+Пользуясь этой теоремой, оценим сложность MergeSort. 
+$$
+T(n) = 2T(\frac{n}{2}) + O(n)
+$$ 
+В данном случае $a = 2,\ b = 2,\ d = 1$. Поэтому мы имеем дело со вторым случаем Основной теоремы, и $T(n) = O(n\log n)$.
