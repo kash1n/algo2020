@@ -12,7 +12,15 @@
 \usepackage{tikz}
 \usepackage{verbatim}
 \usepackage{graphicx}
-
+\usepackage{xcolor}
+\usepackage{hyperref}
+ 
+ % Цвета для гиперссылок
+\definecolor{linkcolor}{HTML}{543AE8} % цвет ссылок
+\definecolor{urlcolor}{HTML}{543AE8} % цвет гиперссылок
+\hypersetup{pdfstartview=FitH,  linkcolor=linkcolor,urlcolor=urlcolor, colorlinks=true}
+ 
+ % Цвет для комментариев вида \note{...}
 \definecolor{faded}{gray}{0.6}
 \def\note{\textcolor{faded}}
  
