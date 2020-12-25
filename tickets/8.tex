@@ -1,0 +1,145 @@
+\section{Сбалансированные, 2-3 и красно-черные деревья}
+
+\subsection*{Сбалансированные деревья}
+Идеально сбалансированное дерево = все пути от корня до
+конечных вершин имеют одинаковую длину.
+В реальности так не бывает почти никогда(!), поэтому хочется, чтобы min/max длины отличались не сильно.
+
+Два способа этого достичь:
+
+\begin{itemize}
+\item AVL (Классическое определение сбалансированного дерева)
+Для любого узла разница между высотами левого и правого
+поддерева не превосходит 1.
+\item Красно-черные Количество черных ребер в любом пути одинаково,
+количество красных ребер в пути не превосходит количество
+черных + 1.
+\end{itemize}
+
+Отсюда гарантированная сложность - $O(logN)$
+
+\subsection*{2-3 деревья}
+
+{\bf Структура:} каждый узел может содержать 1 ключ и $\le 2$ потомков или 2 ключа и $\le 3$ потомков. Ключи отсортированны внутри узла. В 2-узле левое поддерево содержит ключи меньше ключа в узле, правое - больше. В 3-узле левое поддерево содержит ключи меньшие левого ключа узла, правое - большие правого ключа, среднее - большие левого, но меньшие правого.
+
+{\bf Вставка:} 
+
+1. Выполняем поиск, находим лист, в который надо
+вставить ключ.
+
+2. Если лист является 2-узлом, то превращаем его в 3-узел.
+
+3. Если лист является 3-узлом, то превращаем в 4-узел.
+
+4. 4-узел хранит 3 ключа – средний ключ перемещаем в
+родителя, левый и правый ключи превращаем в 2-узлы.
+
+5. Если родитель был 3-узлом, то он превратился в 4-узел
+– выполняем для него шаг 4.
+ 
+{\bf Удаление:} (Не помню, чтобы было на лекциях, однако алгоритм такой же как в B-дереве в билете 9, так как 2-3 дерево - частный случай B-дерева с M = 3).
+
+\subsection*{Красно-черные деревья}
+Идея: в 2-3 дереве заменить 3-узлы на 2 узлы с дополнительным "красным" ребром (идущим, например, влево для левостороннего к-ч дерева).
+
+{\bf Свойства:}
+\begin{itemize}
+\item Количество черных ребер в любом пути одинаково
+\item Все красные ребра идут налево
+\item Нет двух последовательных красных ребер
+\item Взаимнооднозначно соответствуют 2-3 деревьям
+\item Реализация get – как в обычном BST
+\end{itemize}
+
+{\bf Вставка:}
+
+Алгоритм будет показан как программная реализация:
+
+\begin{verbatim}
+private static final boolean RED = true;
+private static final boolean BLACK = false;
+
+private class Node
+{
+    Key key;
+    Value val;
+    Node left, right;
+    boolean color; // color of parent link
+}
+
+private boolean isRed(Node x)
+{
+    if (x == null) return false;
+    return x.color == RED;
+}
+\end{verbatim}
+
+3 вспомогательных операции:
+
+
+\begin{verbatim}
+private Node rotateLeft(Node h)
+{
+    // assert isRed(h.right);
+    Node x = h.right;
+    h.right = x.left;
+    x.left = h;
+    x.color = h.color;
+    h.color = RED;
+    return x;
+}
+\end{verbatim}
+
+
+\begin{verbatim}
+private Node rotateRight(Node h)
+{
+    // assert isRed(h.left);
+    Node x = h.left;
+    h.left = x.right;
+    x.right = h;
+    x.color = h.color;
+    h.color = RED;
+    return x;
+}
+
+\end{verbatim}
+
+
+\begin{verbatim}
+private void flipColors(Node h)
+{
+    // assert !isRed(h);
+    // assert isRed(h.left);
+    // assert isRed(h.right);
+    h.color = RED;
+    h.left.color = BLACK;
+    h.right.color = BLACK;
+}
+\end{verbatim}
+
+Задача - сохранить свойства к-ч дерева при вставке, из этого вытекает следующая функция вставки:
+
+\begin{verbatim}
+private Node put(Node h, Key key, Value val)
+{
+    if (h == null) return new Node(key, val, RED);
+    
+    int cmp = key.compareTo(h.key);
+    if (cmp < 0) h.left = put(h.left, key, val);
+    else if (cmp > 0) h.right = put(h.right, key, val);
+    else if (cmp == 0) h.val = val;
+    
+    // Все красные ребра идут налево
+    if (isRed(h.right) && !isRed(h.left)) h = rotateLeft(h);
+    // Не может быть два красных ребра подряд     
+    if (isRed(h.left) && isRed(h.left.left)) h = rotateRight(h);
+    // Все красные ребра идут налево 
+    if (isRed(h.left) && isRed(h.right)) flipColors(h);          
+    
+    return h;
+}
+\end{verbatim}
+
+{\bf Удаление:} (На лекциях не рассказывалось)
+
