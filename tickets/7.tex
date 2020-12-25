@@ -21,15 +21,14 @@ interface Map<K, V> {
 }
 \end{verbatim}
 
-{\bf Реализация ассоциативного массива}\\
+{\bf Реализация ассоциативного массива}
 \begin{enumerate}
 \item Массив
 \item Отсортированный массив
 \item Бинарные деревья поиска
 \item Хеш-таблицы
 \end{enumerate}
-
-{\bf C\#: интерфейс IDictionary}\\
+{\bf C\#: интерфейс IDictionary}
 \begin{verbatim}
 public interface IDictionary<TKey, TValue> :
     ICollection<KeyValuePair<TKey, TValue>>,
@@ -52,8 +51,7 @@ public interface ICollection<T> : IEnumerable<T>, IEnumerable
     ...
 }
 \end{verbatim}
-
-{\bf Java: интерфейс Map}\\
+{\bf Java: интерфейс Map}
 \begin{verbatim}
 public interface Map<K,V> {
     int size();
@@ -76,8 +74,7 @@ public interface Map<K,V> {
     }
 }
 \end{verbatim}
-
-{\bf Java: интерфейс Set}\\
+{\bf Java: интерфейс Set}
 \begin{verbatim}
 public interface Set<E> implements Iterable<E> {
     int size();
@@ -90,14 +87,10 @@ public interface Set<E> implements Iterable<E> {
     ...
 }
 \end{verbatim}
-
 {\bf Стандартные классы в Java и C\#}\\
-
-
 \underline{Java:} \\
 HashSet<T>, HashMap<K, V> \\
 TreeSet<T>, TreeMap<K, V>
-
 
 \begin{verbatim}
 public abstract class AbstractSet<E> implements Set<E>
@@ -108,13 +101,10 @@ public abstract class AbstractMap<K,V> implements Map<K,V>
 public class HashMap<K,V> extends AbstractMap<K,V>
 public class TreeMap<K,V> extends AbstractMap<K,V>
 \end{verbatim}
-
 \underline{C\#:} \\
 HashSet<T>, Dictionary<K,V> \\
-SortedSet<T>, SortedDictionary<K,V>
-
-
-{\bf Подсчет количества слов}\\
+SortedSet<T>, SortedDictionary<K,V>\\
+{\bf Подсчет количества слов}
 \begin{verbatim}
 private static void CountWords()
 {
@@ -141,7 +131,6 @@ private static void CountWords()
 \end{verbatim}
 
 \noindent{\bf Бинарное дерево поиска}\\
-
 \textit{Двоичное дерево поиска} (англ. binary search tree, BST) — это двоичное дерево, для которого выполняются следующие дополнительные условия (свойства дерева поиска):
 
 \begin{enumerate}
@@ -149,30 +138,18 @@ private static void CountWords()
 \item У всех узлов \textit{левого} поддерева произвольного узла X значения ключей данных \textit{меньше либо равны}, нежели значение ключа данных самого узла X.
 \item У всех узлов \textit{правого} поддерева произвольного узла X значения ключей данных \textit{больше либо равны}, нежели значение ключа данных самого узла X.
 \end{enumerate}
-
-
-(Ключи уникальны, поэтому отношение строго <, наверное)
-
-Вершины~-- записи вида (data, left, right), иногда еще нужен parent, data~-- пара (key, value)
-
+(Ключи уникальны, поэтому отношение строго <, наверное)\\
+Вершины - записи вида (data, left, right), иногда еще нужен parent, data - пара (key, value)\\
 Базовый интерфейс двоичного дерева поиска состоит из трёх операций (сложность из википедии):
-
 \begin{enumerate}
 \item FIND(K) — поиск узла, в котором хранится пара (key, value) с key = K. (Сложность в среднем  O(log n), в худшем случае~-- O(n))
 \item INSERT(K, V) — добавление в дерево пары (key, value) = (K, V). (В ср.~-- O(log n), в худ~-- O(n))
 \item REMOVE(K) — удаление узла, в котором хранится пара (key, value) с key = K. (В ср.~-- O(log n), в худ~-- O(n))
 \end{enumerate}
-
-
-
-{\bf Поиск элемента (FIND)}
-
-\textit{Дано:} дерево Т и ключ K.
-
-\textit{Задача:} проверить, есть ли узел с ключом K в дереве Т, и если да, то вернуть ссылку на этот узел.
-
+{\bf Поиск элемента (FIND)}\\
+\textit{Дано:} дерево Т и ключ K.\\
+\textit{Задача:} проверить, есть ли узел с ключом K в дереве Т, и если да, то вернуть ссылку на этот узел.\\
 \textit{Алгоритм:}
-
 \begin{itemize}
 \item Если дерево пусто, сообщить, что узел не найден, и остановиться.
 \item Иначе сравнить K со значением ключа корневого узла X.
@@ -182,15 +159,10 @@ private static void CountWords()
 \item[\labelitemi] Если K<X, рекурсивно искать ключ K в левом поддереве Т.
 \end{itemize}
 \end{itemize}
-
-{ \bf Добавление элемента (INSERT)}
-
-\textit{Дано:} дерево Т и пара (K, V).
-
-\textit{Задача:} вставить пару (K, V) в дерево Т (при совпадении K, заменить V).
-
+{ \bf Добавление элемента (INSERT)}\\
+\textit{Дано:} дерево Т и пара (K, V).\\
+\textit{Задача:} вставить пару (K, V) в дерево Т (при совпадении K, заменить V).\\
 \textit{Алгоритм:}
-
 \begin{itemize}
 \item Если дерево пусто, заменить его на дерево с одним корневым узлом ((K, V), null, null) и остановиться.
 \item Иначе сравнить K с ключом корневого узла X.
@@ -198,24 +170,14 @@ private static void CountWords()
 \item[\labelitemi] Если K>X, рекурсивно добавить (K, V) в правое поддерево Т.
 \item[\labelitemi] Если K<X, рекурсивно добавить (K, V) в левое поддерево Т.
 \item[\labelitemi] Если K=X, заменить V текущего узла новым значением.
-
 \end{itemize}
 \end{itemize}
-
-
-{ \bf Удаление узла (REMOVE)}
-
-
-\textit{Дано:} дерево Т с корнем n и ключом K.
-
-\textit{Задача:} удалить из дерева Т узел с ключом K (если такой есть).
-
-\textit{Алгоритм:}
-
-
+{ \bf Удаление узла (REMOVE)}\\
+\textit{Дано:} дерево Т с корнем n и ключом K.\\
+\textit{Задача:} удалить из дерева Т узел с ключом K (если такой есть).\\
+\textit{Алгоритм:}\\
  \noindent 1. Если дерево T пусто, остановиться;\\
 2. Иначе сравнить K с ключом X корневого узла n.
-
 \begin{itemize}
 \item[\labelitemi] Если K>X, рекурсивно удалить K из правого поддерева Т;
 \item[\labelitemi] Если K<X, рекурсивно удалить K из левого поддерева Т;
@@ -239,8 +201,7 @@ private static void CountWords()
 \end{itemize}
 \end{itemize}
 \end{itemize}
-
-{\bf Реализация ("Algorithms in Java")}\\
+{\bf Реализация ("Algorithms in Java")}
 \begin{verbatim}
 public class BST<Key extends Comparable<Key>, Value>
 {
@@ -265,8 +226,7 @@ public class BST<Key extends Comparable<Key>, Value>
     public void put(Key key, Value val) { ... }
 }
 \end{verbatim}
-
-Бинарные деревья поиска используют сравнения\\
+Бинарные деревья поиска используют сравнения
 \begin{verbatim}
 interface Comparable<T> {
 int compareTo(T o);
@@ -275,11 +235,9 @@ public interface Comparator<T> {
 int compare(T o1, T o2);
 }
 \end{verbatim}
-
 \noindent Java: Comparable, Comparator \\
-C\#: IComparable, IComparer
-
-{\bf Реализация: get}\\
+C\#: IComparable, IComparer\\
+{\bf Реализация: get}
 \begin{verbatim}
 public Value get(Key key) {
     return get(root, key);
@@ -296,8 +254,7 @@ private Value get(Node x, Key key) {
     else return x.val;
 }
 \end{verbatim}
-
-{\bf Реализация: put}\\
+{\bf Реализация: put}
 \begin{verbatim}
 public void put(Key key, Value val) {
     // Search for key. Update value if found; grow table if new.
@@ -318,21 +275,15 @@ private Node put(Node x, Key key, Value val) {
     return x;
 }
 \end{verbatim}
-
-
-(Тут какая-то дичь с симуляциями, думаю, что это лучше прямо в презенташке смотреть)
-
+(Тут какая-то дичь с симуляциями, думаю, что это лучше прямо в презенташке смотреть)\\
 {\bf Сложность в случайном BST}\\
 \textit{Утв.} Search hit в случайном бинарном дереве поиска,
 содержащем N ключей требует в среднем $\sim 2 ln N (\approx 1.39 log N)$ сравнений.\\
-\vspace{3mm}
-Пусть $C_N$ – сумма длин путей до всех узлов в дереве с $N$ узлами (тогда успешный поиск требует в среднем $1 + C_N /N$). \\
-
+%\vspace{3mm}
+Пусть $C_N$ – сумма длин путей до всех узлов в дереве с $N$ узлами (тогда успешный поиск требует в среднем $1 + C_N /N$).
 \begin{center}
-
 $C_N = N=1+(C_0+C_{N-1})/N+(C_1+C_{N-2})/N+. . .+(C_{N-1}+C_0)/N$\\
 $C_0 = C_1 = 0$
-
 \end{center}
 (рекурентное соотношение аналогично тому, которое возникало при анализе Quicksort, см. лекцию 3).
 \vspace{2mm}
@@ -346,7 +297,7 @@ $C_N \sim 2N ln N$
 search hit (задача).
 
 \vspace{3mm}
-{\bf Hibbard deletion}\\
+\noindent{\bf Hibbard deletion}\\
 Один из эффективных способов сделать это, обнаруженный Томасом Хиббардом в 1962 году, состоит в том, чтобы заменить удаляемый узел местами его преемника . Преемником ключа является следующий по величине ключ в дереве, и его удобно найти как минимальный ключ в правом поддереве удаляемого узла.
 
 Так же в презенташке написано Tombstone в удалении, но я толком не нашла ничего.
