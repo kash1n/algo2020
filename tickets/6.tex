@@ -1,0 +1,97 @@
+\section {Абстрактные типы данных, интерфейс и реализация, стек и очередь - реализация связанным списком и массивом.}
+
+\noindent\textbf{АТД} \--- тип данных, представление которого скрыто от клиента (= интерфейс).
+
+При использовании \--- особое внимание уделяется операциям, указанным там. При реализации \--- данным, а потом уже реализуются операции над ними. \\
+
+\noindent\textbf{Стек}:
+\begin{itemize}
+\item LIFO
+\item pop, push, peek(доступ к верхнему элементу) и count
+\item нет итератора
+
+
+\end{itemize}
+
+\noindent\textbf{Очередь}:
+\begin{itemize}
+\item FIFO
+\item enqueue, dequeue, peek(доступ к верхнему элементу) и count
+\item тоже нет итератора
+\end{itemize}
+
+\noindent\textbf{Двусторонняя очередь (Дэк)}:
+\begin{itemize}
+\item удаляем и добавляем с двух сторон
+\item enqueue, dequeue, peek(доступ к верхнему элементу) - для начала и для конца и count
+\item тоже нет итератора
+\end{itemize}
+
+
+\noindent\textbf{Реализация стека на основе связанного списка}:
+\begin{verbatim}
+public class Stack
+{
+    LinkedList _items = new LinkedList();
+
+    public void Push(T value)
+    {
+        _items.AddLast(value);
+    }
+
+    public T Pop()
+    {
+        if (_items.Count == 0)
+    	{
+        	throw new InvalidOperationException("The stack is empty");
+    	}
+
+    	T result = _items.Tail.Value;
+
+    	_items.RemoveLast();
+
+    	return result;
+    }
+
+    public T Peek()
+    {
+        if (_items.Count == 0)
+    	{
+        	throw new InvalidOperationException("The stack is empty");
+    	}
+
+    	return _items.Tail.Value;
+    }
+
+    public int Count
+    {
+        get
+   		{
+        	return _items.Count;
+    	}
+    }
+}
+\end{verbatim}
+\noindent\textit{Для очереди примерно то же самое}
+
+\noindent\textbf{Реализация дека на основе массива}:
+\begin{verbatim}
+public class Stack
+{
+    T[] _items = new T[0];
+
+    // Количество элементов в очереди.
+    int _size = 0;
+
+    // Индекс первого (самого старого) элемента.
+    int _head = 0;
+
+    // Индекс последнего (самого нового) элемента.
+    int _tail = -1;
+    }
+
+	//интерфейс такой же, писать не надо
+}
+\end{verbatim}
+
+\noindent\textit{Source}: \href{https://tproger.ru/translations/stacks-and-queues-for-beginners/amp/}{примеры кода и все остальное}
