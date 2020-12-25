@@ -33,12 +33,12 @@ $"abc" \rightarrow ord(a)*ord(b)*ord(c)$.
 \begin{verbatim}
 public int hash(char[] value) 
 {
-	int h = 0;
-	for (int i = 0; i < value.length; i++) 
-	{
-		h = 31 * h + value[i];
-	}
-	return h;
+    int h = 0;
+    for (int i = 0; i < value.length; i++) 
+      {
+        h = 31 * h + value[i];
+      }
+    return h;
 }
 \end{verbatim}
 
