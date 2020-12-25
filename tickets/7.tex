@@ -1,0 +1,352 @@
+\section {Ассоциативные массивы, бинарные деревья поиска.}
+\noindent{\bf Ассоциативный массив (Map, Dictionary)}\\
+Абстрактный тип данных:
+
+\qquad набор пар <ключ, значение> (ключ уникальный).
+
+Операции (интерфейс):
+\begin{enumerate}
+\item Вставка
+\item Поиск по ключу
+\item Удаление по ключу
+\end{enumerate}
+
+\begin{verbatim}
+interface Map<K, V> {
+    ...
+    V get(K key);
+    V put(K key, V value);
+    V remove(K key);
+    ...
+}
+\end{verbatim}
+
+{\bf Реализация ассоциативного массива}\\
+\begin{enumerate}
+\item Массив
+\item Отсортированный массив
+\item Бинарные деревья поиска
+\item Хеш-таблицы
+\end{enumerate}
+
+{\bf C\#: интерфейс IDictionary}\\
+\begin{verbatim}
+public interface IDictionary<TKey, TValue> :
+    ICollection<KeyValuePair<TKey, TValue>>,
+    IEnumerable<KeyValuePair<TKey, TValue>>
+{
+    ICollection<TKey> Keys { get; }
+    ICollection<TValue> Values { get; }
+    
+    TValue this[TKey key] { get; set; }
+    void Add(TKey key, TValue value);
+    bool ContainsKey(TKey key);
+    bool Remove(TKey key);
+    bool TryGetValue(TKey key, out TValue value);
+}
+
+public interface ICollection<T> : IEnumerable<T>, IEnumerable
+{
+    int Count { get; }
+    void Clear();
+    ...
+}
+\end{verbatim}
+
+{\bf Java: интерфейс Map}\\
+\begin{verbatim}
+public interface Map<K,V> {
+    int size();
+    boolean isEmpty();
+    boolean containsKey(Object key);
+    boolean containsValue(Object value);
+    V get(Object key);
+    V put(K key, V value);
+    V remove(Object key);
+    void clear();
+
+    Set<K> keySet();
+    Collection<V> values();
+    Set<Map.Entry<K, V>> entrySet();
+    
+    interface Entry<K,V> {
+        K getKey();
+        V getValue();
+        V setValue(V value);
+    }
+}
+\end{verbatim}
+
+{\bf Java: интерфейс Set}\\
+\begin{verbatim}
+public interface Set<E> implements Iterable<E> {
+    int size();
+    boolean isEmpty();
+    boolean contains(Object o);
+    V get(Object key);
+    boolean add(E e);
+    V remove(Object o);
+    void clear();
+    ...
+}
+\end{verbatim}
+
+{\bf Стандартные классы в Java и C\#}\\
+
+
+\underline{Java:} \\
+HashSet<T>, HashMap<K, V> \\
+TreeSet<T>, TreeMap<K, V>
+
+
+\begin{verbatim}
+public abstract class AbstractSet<E> implements Set<E>
+public class HashSet<E> extends AbstractSet<E>
+public class TreeSet<E> extends AbstractSet<E>
+
+public abstract class AbstractMap<K,V> implements Map<K,V>
+public class HashMap<K,V> extends AbstractMap<K,V>
+public class TreeMap<K,V> extends AbstractMap<K,V>
+\end{verbatim}
+
+\underline{C\#:} \\
+HashSet<T>, Dictionary<K,V> \\
+SortedSet<T>, SortedDictionary<K,V>
+
+
+{\bf Подсчет количества слов}\\
+\begin{verbatim}
+private static void CountWords()
+{
+    var dic = new Dictionary<string, int>();
+    while (true)
+    {
+        string line = Console.ReadLine();
+        if (string.IsNullOrEmpty(line))
+        break;
+        
+        string[] words = line.Split(’ ’);
+        foreach (string word in words)
+        {
+            if (dic.ContainsKey(word))
+                dic[word] = dic[word] + 1;
+            else
+                dic[word] = 1;
+        }
+    }
+    
+    foreach (var kvp in dic)
+        Console.WriteLine("{0} = {1}", kvp.Key, kvp.Value);
+}
+\end{verbatim}
+
+\noindent{\bf Бинарное дерево поиска}\\
+
+\textit{Двоичное дерево поиска} (англ. binary search tree, BST) — это двоичное дерево, для которого выполняются следующие дополнительные условия (свойства дерева поиска):
+
+\begin{enumerate}
+\item Оба поддерева — левое и правое — являются двоичными деревьями поиска.
+\item У всех узлов \textit{левого} поддерева произвольного узла X значения ключей данных \textit{меньше либо равны}, нежели значение ключа данных самого узла X.
+\item У всех узлов \textit{правого} поддерева произвольного узла X значения ключей данных \textit{больше либо равны}, нежели значение ключа данных самого узла X.
+\end{enumerate}
+
+
+(Ключи уникальны, поэтому отношение строго <, наверное)
+
+Вершины~-- записи вида (data, left, right), иногда еще нужен parent, data~-- пара (key, value)
+
+Базовый интерфейс двоичного дерева поиска состоит из трёх операций (сложность из википедии):
+
+\begin{enumerate}
+\item FIND(K) — поиск узла, в котором хранится пара (key, value) с key = K. (Сложность в среднем  O(log n), в худшем случае~-- O(n))
+\item INSERT(K, V) — добавление в дерево пары (key, value) = (K, V). (В ср.~-- O(log n), в худ~-- O(n))
+\item REMOVE(K) — удаление узла, в котором хранится пара (key, value) с key = K. (В ср.~-- O(log n), в худ~-- O(n))
+\end{enumerate}
+
+
+
+{\bf Поиск элемента (FIND)}
+
+\textit{Дано:} дерево Т и ключ K.
+
+\textit{Задача:} проверить, есть ли узел с ключом K в дереве Т, и если да, то вернуть ссылку на этот узел.
+
+\textit{Алгоритм:}
+
+\begin{itemize}
+\item Если дерево пусто, сообщить, что узел не найден, и остановиться.
+\item Иначе сравнить K со значением ключа корневого узла X.
+\begin{itemize}
+\item[\labelitemi] Если K=X, выдать ссылку на этот узел и остановиться.
+\item[\labelitemi] Если K>X, рекурсивно искать ключ K в правом поддереве Т.
+\item[\labelitemi] Если K<X, рекурсивно искать ключ K в левом поддереве Т.
+\end{itemize}
+\end{itemize}
+
+{ \bf Добавление элемента (INSERT)}
+
+\textit{Дано:} дерево Т и пара (K, V).
+
+\textit{Задача:} вставить пару (K, V) в дерево Т (при совпадении K, заменить V).
+
+\textit{Алгоритм:}
+
+\begin{itemize}
+\item Если дерево пусто, заменить его на дерево с одним корневым узлом ((K, V), null, null) и остановиться.
+\item Иначе сравнить K с ключом корневого узла X.
+\begin{itemize}
+\item[\labelitemi] Если K>X, рекурсивно добавить (K, V) в правое поддерево Т.
+\item[\labelitemi] Если K<X, рекурсивно добавить (K, V) в левое поддерево Т.
+\item[\labelitemi] Если K=X, заменить V текущего узла новым значением.
+
+\end{itemize}
+\end{itemize}
+
+
+{ \bf Удаление узла (REMOVE)}
+
+
+\textit{Дано:} дерево Т с корнем n и ключом K.
+
+\textit{Задача:} удалить из дерева Т узел с ключом K (если такой есть).
+
+\textit{Алгоритм:}
+
+
+ \noindent 1. Если дерево T пусто, остановиться;\\
+2. Иначе сравнить K с ключом X корневого узла n.
+
+\begin{itemize}
+\item[\labelitemi] Если K>X, рекурсивно удалить K из правого поддерева Т;
+\item[\labelitemi] Если K<X, рекурсивно удалить K из левого поддерева Т;
+\item[\labelitemi] Если K=X, то необходимо рассмотреть три случая.
+\begin{itemize}
+\item[\labelitemi] Если обоих детей нет, то удаляем текущий узел и обнуляем ссылку на него у родительского узла;
+\item[\labelitemi] Если одного из детей нет, то значения полей ребёнка m ставим вместо соответствующих значений корневого узла, затирая его старые значения, и освобождаем память, занимаемую узлом m;
+\item[\labelitemi] Если оба ребёнка присутствуют, то
+\begin{itemize}
+\item[\labelitemi] Если самый левый элемент правого поддерева m не имеет поддеревьев
+\begin{itemize}
+\item[\labelitemi] Копируем значения K, V из m в удаляемый элемент
+\item[\labelitemi] Удаляем m
+\end{itemize}
+\item[\labelitemi] Если m имеет правое поддерево
+\begin{itemize}
+\item[\labelitemi] Копируем значения K, V из m в удаляемый элемент
+\item[\labelitemi] Заменяем у родительского узла ссылку на m ссылкой на правое поддерево m
+\item[\labelitemi] Удаляем m
+\end{itemize}
+\end{itemize}
+\end{itemize}
+\end{itemize}
+
+{\bf Реализация ("Algorithms in Java")}\\
+\begin{verbatim}
+public class BST<Key extends Comparable<Key>, Value>
+{
+    private class Node
+    {
+        private Key key; // key
+        private Value val; // associated value
+        private Node left, right; // links to subtrees
+        private int N; // # nodes in subtree rooted here
+        
+        public Node(Key key, Value val, int N) {
+            this.key = key; this.val = val; this.N = N;
+        }
+    }
+    
+    private Node root; // root of BST
+    
+    public int size() { return size(root); }
+    private int size(Node x) { return x == null ? 0 : x.N; }
+    
+    public Value get(Key key) { ... }
+    public void put(Key key, Value val) { ... }
+}
+\end{verbatim}
+
+Бинарные деревья поиска используют сравнения\\
+\begin{verbatim}
+interface Comparable<T> {
+int compareTo(T o);
+}
+public interface Comparator<T> {
+int compare(T o1, T o2);
+}
+\end{verbatim}
+
+\noindent Java: Comparable, Comparator \\
+C\#: IComparable, IComparer
+
+{\bf Реализация: get}\\
+\begin{verbatim}
+public Value get(Key key) {
+    return get(root, key);
+}
+
+private Value get(Node x, Key key) {
+    // Return value associated with key in the subtree rooted at x;
+    // return null if key not present in subtree rooted at x.
+    if (x == null) return null;
+    
+    int cmp = key.compareTo(x.key);
+    if (cmp < 0) return get(x.left, key);
+    else if (cmp > 0) return get(x.right, key);
+    else return x.val;
+}
+\end{verbatim}
+
+{\bf Реализация: put}\\
+\begin{verbatim}
+public void put(Key key, Value val) {
+    // Search for key. Update value if found; grow table if new.
+    root = put(root, key, val);
+}
+
+private Node put(Node x, Key key, Value val) {
+    // Change key’s value to val if key in subtree rooted at x.
+    // Otherwise, add new node to subtree associating key with val.
+    if (x == null) return new Node(key, val, 1);
+    
+    int cmp = key.compareTo(x.key);
+    if (cmp < 0) x.left = put(x.left, key, val);
+    else if (cmp > 0) x.right = put(x.right, key, val);
+    else x.val = val;
+    
+    x.N = size(x.left) + size(x.right) + 1;
+    return x;
+}
+\end{verbatim}
+
+
+(Тут какая-то дичь с симуляциями, думаю, что это лучше прямо в презенташке смотреть)
+
+{\bf Сложность в случайном BST}\\
+\textit{Утв.} Search hit в случайном бинарном дереве поиска,
+содержащем N ключей требует в среднем $\sim 2 ln N (\approx 1.39 log N)$ сравнений.\\
+\vspace{3mm}
+Пусть $C_N$ – сумма длин путей до всех узлов в дереве с $N$ узлами (тогда успешный поиск требует в среднем $1 + C_N /N$). \\
+
+\begin{center}
+
+$C_N = N=1+(C_0+C_{N-1})/N+(C_1+C_{N-2})/N+. . .+(C_{N-1}+C_0)/N$\\
+$C_0 = C_1 = 0$
+
+\end{center}
+(рекурентное соотношение аналогично тому, которое возникало при анализе Quicksort, см. лекцию 3).
+\vspace{2mm}
+\begin{center}
+$C_N \sim 2N ln N$
+\end{center}
+\vspace{3mm}
+\textit{Утв.} Вставка и search miss в случайном бинарном дереве
+поиска, содержащем $N$ ключей требует в среднем $\sim 2 ln N (\approx 1.39 log N)$ сравнений.\\
+Вставка и search miss требует на 1 сравнение больше, чем
+search hit (задача).
+
+\vspace{3mm}
+{\bf Hibbard deletion}\\
+Один из эффективных способов сделать это, обнаруженный Томасом Хиббардом в 1962 году, состоит в том, чтобы заменить удаляемый узел местами его преемника . Преемником ключа является следующий по величине ключ в дереве, и его удобно найти как минимальный ключ в правом поддереве удаляемого узла.
+
+Так же в презенташке написано Tombstone в удалении, но я толком не нашла ничего.
