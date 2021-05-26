@@ -1,0 +1,42 @@
+%main.tex
+\documentclass[specialist, subf, href, colorlinks=true, 12pt, times, mtpro, final]{disser}
+\usepackage[utf8]{inputenc}
+\usepackage[english,russian]{babel}
+\usepackage{a4wide}
+\usepackage{mathtext}
+\usepackage{amsbsy}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{tikz}
+\usepackage{verbatim}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{hyperref}
+ 
+ % Цвета для гиперссылок
+\definecolor{linkcolor}{HTML}{543AE8} % цвет ссылок
+\definecolor{urlcolor}{HTML}{543AE8} % цвет гиперссылок
+\hypersetup{pdfstartview=FitH,  linkcolor=linkcolor,urlcolor=urlcolor, colorlinks=true}
+ 
+ % Цвет для комментариев вида \note{...}
+\definecolor{faded}{gray}{0.6}
+\def\note{\textcolor{faded}}
+ 
+\begin{document}
+
+\tableofcontents
+
+\newpage
+{\Large \bf Программа экзамена (весна 2021)}
+
+\begin{enumerate}
+{\footnotesize
+\item Минимальные остовные деревья. Алгоритмы Прима и Крускала.
+}
+\end{enumerate}
+
+\include {tickets/15}
+ 
+\end{document}
